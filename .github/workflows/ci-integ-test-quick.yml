@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       runner-os: ${{ steps.determine-suite.outputs.suite == 'quick' && '["ubuntu-latest"]' || '["ubuntu-latest", "windows-latest", "macos-latest"]' }}
-      cache-key-prefix: ${{ steps.determine-suite.outputs.suite == 'quick' && '' || github.run_number }}
+      cache-key-prefix: ${{ steps.determine-suite.outputs.suite == 'quick' && 'quick' || github.run_number }}
     steps:
     - name: Get current PR details
       uses: 8BitJonny/gh-get-current-pr@3.0.0
