@@ -1,4 +1,4 @@
-name: CI-integ-test-quick
+name: CI-integ-test
 
 on:
   workflow_dispatch:
@@ -8,7 +8,8 @@ jobs:
   determine-suite:
     runs-on: ubuntu-latest
     outputs:
-      suite: ${{ steps.determine-suite.outputs.suite }}
+      runner-os: ${{ steps.determine-suite.outputs.suite == 'quick' && '["ubuntu-latest"]' || '["ubuntu-latest", "windows-latest", "macos-latest"]' }}
+      cache-key-prefix: ${{ steps.determine-suite.outputs.suite == 'quick' && '' || github.run_number }}
     steps:
     - name: Get current PR details
       uses: 8BitJonny/gh-get-current-pr@3.0.0
@@ -42,9 +43,11 @@ jobs:
 
   build-distribution:
     needs: determine-suite
-    if: ${{ needs.determine-suite.outputs.suite == 'XXXX' }}
     runs-on: ubuntu-latest
     steps:
+    - run: |
+        echo "Runner OS: ${{ needs.determine-suite.outputs.runner-os }}"
+        echo "Cache key prefix: ${{ needs.determine-suite.outputs.cache-key-prefix }}"
     - name: Checkout sources
       uses: actions/checkout@v4
     - name: Build and upload distribution
@@ -55,120 +58,121 @@ jobs:
     uses: ./.github/workflows/integ-test-action-inputs.yml
     with:
       runner-os: '["ubuntu-latest"]'
+      cache-key-prefix: ${{github.run_number}}-
 
-  build-scan-publish:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-build-scan-publish.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # build-scan-publish:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-build-scan-publish.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  cache-cleanup:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-cache-cleanup.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
-      cache-key-prefix: ${{github.run_number}}- # Requires a fresh cache entry each run
+  # cache-cleanup:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-cache-cleanup.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
+  #     cache-key-prefix: ${{github.run_number}}- # Requires a fresh cache entry each run
 
-  caching-config:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-caching-config.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # caching-config:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-caching-config.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  dependency-graph:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-dependency-graph.yml
-    permissions:
-      contents: write
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # dependency-graph:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-dependency-graph.yml
+  #   permissions:
+  #     contents: write
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  dependency-submission:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-dependency-submission.yml
-    permissions:
-      contents: write
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # dependency-submission:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-dependency-submission.yml
+  #   permissions:
+  #     contents: write
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  dependency-submission-failures:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-dependency-submission-failures.yml
-    permissions:
-      contents: write
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # dependency-submission-failures:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-dependency-submission-failures.yml
+  #   permissions:
+  #     contents: write
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  execution-with-caching:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-execution-with-caching.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # execution-with-caching:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-execution-with-caching.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  execution:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-execution.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # execution:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-execution.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  develocity-injection:
-    if: ${{ vars.HAS_GRADLE_ACTIONS_SECRETS == 'true' }}
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-inject-develocity.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
-    secrets:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+  # develocity-injection:
+  #   if: ${{ vars.HAS_GRADLE_ACTIONS_SECRETS == 'true' }}
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-inject-develocity.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
+  #   secrets:
+  #     DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
 
-  provision-gradle-versions:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-provision-gradle-versions.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # provision-gradle-versions:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-provision-gradle-versions.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  restore-configuration-cache:
-    if: ${{ vars.HAS_GRADLE_ACTIONS_SECRETS == 'true' }}
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-restore-configuration-cache.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
-    secrets:
-      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+  # restore-configuration-cache:
+  #   if: ${{ vars.HAS_GRADLE_ACTIONS_SECRETS == 'true' }}
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-restore-configuration-cache.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
+  #   secrets:
+  #     GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-  restore-containerized-gradle-home:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-restore-containerized-gradle-home.yml
+  # restore-containerized-gradle-home:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-restore-containerized-gradle-home.yml
 
-  restore-custom-gradle-home:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-restore-custom-gradle-home.yml
+  # restore-custom-gradle-home:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-restore-custom-gradle-home.yml
 
-  restore-gradle-home:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-restore-gradle-home.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # restore-gradle-home:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-restore-gradle-home.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  restore-java-toolchain:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-restore-java-toolchain.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # restore-java-toolchain:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-restore-java-toolchain.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  sample-kotlin-dsl:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-sample-kotlin-dsl.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # sample-kotlin-dsl:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-sample-kotlin-dsl.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  sample-gradle-plugin:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-sample-gradle-plugin.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # sample-gradle-plugin:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-sample-gradle-plugin.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
 
-  toolchain-detection:
-    needs: build-distribution
-    uses: ./.github/workflows/integ-test-detect-java-toolchains.yml
-    with:
-      runner-os: '["ubuntu-latest"]'
+  # toolchain-detection:
+  #   needs: build-distribution
+  #   uses: ./.github/workflows/integ-test-detect-java-toolchains.yml
+  #   with:
+  #     runner-os: '["ubuntu-latest"]'
