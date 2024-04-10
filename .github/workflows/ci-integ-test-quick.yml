@@ -16,13 +16,13 @@ jobs:
     - name: Determine suite to run
       id: determine-suite
       run: |
-        # Always run quick suite if we are not in the core `gradle/actions` repository
-        # This reduces the load for developers working on forks
-        if [ "${{ github.repository }}" != "gradle/actions" ]; then
-          echo "Not in core repository: suite=quick"
-          echo "suite=quick" >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
+        # # Always run quick suite if we are not in the core `gradle/actions` repository
+        # # This reduces the load for developers working on forks
+        # if [ "${{ github.repository }}" != "gradle/actions" ]; then
+        #   echo "Not in core repository: suite=quick"
+        #   echo "suite=quick" >> "$GITHUB_OUTPUT"
+        #   exit 0
+        # fi
 
         # Always run quick suite for dependabot PRs
         if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
