@@ -1,5 +1,65 @@
 [
   {
+    "version": "8.11-rc-3",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.11-rc-2",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.11-rc-1",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.11-milestone-1",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.10.2",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.10.2-milestone-1",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.10.1",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.10",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.10-rc-1",
+    "checksum": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
+  },
+  {
+    "version": "8.9",
+    "checksum": "498495120a03b9a6ab5d155f5de3c8f0d986a449153702fb80fc80e134484f17"
+  },
+  {
+    "version": "8.9-rc-2",
+    "checksum": "498495120a03b9a6ab5d155f5de3c8f0d986a449153702fb80fc80e134484f17"
+  },
+  {
+    "version": "8.9-rc-1",
+    "checksum": "498495120a03b9a6ab5d155f5de3c8f0d986a449153702fb80fc80e134484f17"
+  },
+  {
+    "version": "8.8",
+    "checksum": "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8"
+  },
+  {
+    "version": "8.8-rc-2",
+    "checksum": "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8"
+  },
+  {
+    "version": "8.8-rc-1",
+    "checksum": "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8"
+  },
+  {
     "version": "8.7",
     "checksum": "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8"
   },
