@@ -32,6 +32,11 @@
 - cache.ValidationError
 - cache.ReserveCacheError
 
+## @actions/tool-cache
+
+- toolCache.extractZip
+- toolCache.downloadTool
+
 ## @actions/exec
 
 - exec.exec
@@ -45,10 +50,3 @@
 ## @actions/artifact
 
 - DefaultArtifactClient
-
-
-## @actions/http-client
-
-- httpClient.get
-
-  
